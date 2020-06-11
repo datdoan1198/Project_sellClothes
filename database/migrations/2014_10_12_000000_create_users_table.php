@@ -15,11 +15,14 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('name')->comment('tên user');
+            $table->string('email')->unique()->comment('email user');
+            $table->bigInteger('phone')->comment('số điện thoại  user')->nullable();
+            $table->string('address')->comment('địa chỉ user')->nullable();
+            // $table->timestamp('email_verified_at')->nullable()->comment('thời gian email xác nhận tài khoản');
+            $table->string('password')->comment('mật khẩu user');
+            $table->longText('image')->comment('ảnh user')->nullable();
+            // $table->rememberToken()->comment('nhớ đăng nhập');
             $table->timestamps();
         });
     }

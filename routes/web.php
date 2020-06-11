@@ -13,6 +13,44 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', function(){
+
+	return view('backend.index');
+});
+
+// Route::group(
+// 	[
+// 		'prefix'=>'user',
+// 		'as' => 'user.'
+// 	],function(){
+// 		Route::get('/index',function(){
+// 			return view('backend.user.list');	
+// 		})->name('index');
+// 		Route::get('/create',function(){
+// 			return view ('backend.user.create');
+// 		})->name('create');
+// 		Route::get('/edit/{id}',function($id){
+// 			return view ('backend.user.edit',['id'=>$id]);
+// 		})->name('edit');
+// 		Route::get('/show/{id}',function($id){
+// 			return view('backend.user.detail',['id'=>$id]);
+// 		})->name('show');
+// 		Route::delete('{id}',function($id){
+// 			dd('$id');
+// 		})->name('destroy');
+// 		Route::put('{id}',function(){
+			
+// 		});
+// });
+
+Route::resource('user', 'backend\UserController');
+Route::resource('product', 'backend\ProductController');
+
+Route::get('/fondend/index',function(){
+	return view('fondend.layout.master');
+
 });
