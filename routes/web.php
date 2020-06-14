@@ -47,10 +47,18 @@ Route::get('/', function(){
 // 		});
 // });
 
-Route::resource('user', 'backend\UserController');
-Route::resource('product', 'backend\ProductController');
 
-Route::get('/fondend/index',function(){
-	return view('fondend.layout.master');
+
+Route::group([
+	'namespace' => 'backend'
+],function(){
+	Route::resource('user', 'UserController');
+	Route::resource('product', 'ProductController');
+	Route::resource('category', 'CategoryController');
+
+});
+
+Route::get('/fondend/home',function(){
+	return view('fondend.home');
 
 });

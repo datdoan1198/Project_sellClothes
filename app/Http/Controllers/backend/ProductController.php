@@ -4,6 +4,8 @@ namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Product;
 
 class ProductController extends Controller
@@ -18,9 +20,14 @@ class ProductController extends Controller
     // const NỮ::0;
     public function index()
     {
-        $products = Product::all();
+        
+        $categories = DB::table('categories')->get();
+        $collection = DB::table('collection')->get();
+        $products = Product::paginate(5);
         return view('backend.product.index',[
             'products' => $products,
+            'categories' => $categories,
+            'collection' => $collection,
         ]);
     }
 
@@ -31,8 +38,15 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $categories = DB::table('categories')->get();
+        $users = DB::table('users')->get();
+        $collection = DB::table('collection')->get();
 
-        return view('backend.product.create');
+        return view('backend.product.create',[
+            'categories' => $categories,
+            'users' => $users,
+            'collection' => $collection,
+        ]);
     }
 
     /**
@@ -47,13 +61,13 @@ class ProductController extends Controller
 
         $product = new Product();
 
-        $product->name = $data['name'];
-        $product->slug = $data['name'];
+        $product->name = $data['name'];     
         $product->category_id = $data['category_id'];
-        $product->trade_mark = $data['trade_mark'];
-        $product->status = $data['status'];
+        $product->user_id = $data['user_id'];
+        $product->collection_id = $data['collection_id'];
         $product->gender = $data['gender'];
         $product->price = $data['price'];
+        $product->discount_percent = $data['discount_percent'];
 
         $product->save();
         return redirect()->route('product.index');
@@ -73,6 +87,7 @@ class ProductController extends Controller
 
         return view('backend.product.detail',[
             'product' => $product,
+
         ]); 
     }
 
@@ -84,9 +99,15 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
+        $categories = DB::table('categories')->get();
+        $users = DB::table('users')->get();
+        $collection = DB::table('collection')->get();
         $product = Product::find($id);
         return view('backend.product.edit',[
             'product' => $product,
+            'categories' => $categories,
+            'users' => $users,
+            'collection' => $collection,
         ]);
     }
 
@@ -102,11 +123,13 @@ class ProductController extends Controller
         $data = $request->all();
 
         $product = Product::find($id);
-        $product->name  = $data['name'];
-        $product->trade_mark = $data['trade_mark'];
+        $product->name = $data['name'];     
+        $product->category_id = $data['category_id'];
+        $product->user_id = $data['user_id'];
+        $product->collection_id = $data['collection_id'];
         $product->gender = $data['gender'];
-        $product->status = $data['status'];
         $product->price = $data['price'];
+        $product->discount_percent = $data['discount_percent'];
 
         $product->save();
 

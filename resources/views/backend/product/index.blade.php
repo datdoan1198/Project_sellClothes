@@ -5,8 +5,9 @@
 		<thead>
 			<tr>
 				<th>Tên sản phẩm</th>
-				<th>Thương hiệu</th>
-				<th>Giá bán</th>
+				<th>Danh Mục</th>
+				<th>Bộ Sưu Tập</th>
+				<th>Giá Bán</th>
 				<th>Giới tính</th>
 			</tr>
 			
@@ -15,8 +16,25 @@
 			@foreach ($products as $product)			
 			<tr>
 				<td>{{ $product['name'] }}</td>
-				<td>{{ $product['trade_mark']}}</td>
-				<td>{{ number_format($product['price']) }}</td>
+				<td>
+					@foreach ($categories as $category)
+						@if ($product->category_id == $category->id)
+							{{ $category->name }}
+						@endif
+					@endforeach
+
+				</td>
+				
+				<td>
+					@foreach ($collection as $value)
+						@if ($product->collection_id == $value->id)
+							{{ $value->name }}
+						@endif
+					@endforeach
+				</td>
+				<td>
+					{{ number_format($product['price']) }}
+				</td>
 				<td>
 					@if ($product['gender'] == 1)
 						{{ 'Nam' }}
@@ -44,4 +62,8 @@
 			@endforeach
 		</tbody>
 	</table>
+
+	<div>
+		{{ $products->links() }}
+	</div>
 @endsection
