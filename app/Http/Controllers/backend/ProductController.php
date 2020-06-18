@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\backend;
-
+use Illuminate\Http\UploadedFile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Product;
-
+use App\Model\Product;
+use App\Model\Category;
+use App\Model\Collection;
+use App\User;
+use App\Model\ProductImage;
 class ProductController extends Controller
 {
     /**
@@ -21,9 +24,10 @@ class ProductController extends Controller
     public function index()
     {
         
-        $categories = DB::table('categories')->get();
-        $collection = DB::table('collection')->get();
-        $products = Product::paginate(5);
+        $categories = Category::all();
+        $collection = Collection::all();
+        $products = Product::Paginate(5);
+
         return view('backend.product.index',[
             'products' => $products,
             'categories' => $categories,
@@ -38,10 +42,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = DB::table('categories')->get();
-        $users = DB::table('users')->get();
-        $collection = DB::table('collection')->get();
-
+        
+        $categories = Category::all();
+        $collection = Collection::all();
+        $users = User::all();
         return view('backend.product.create',[
             'categories' => $categories,
             'users' => $users,
@@ -58,8 +62,9 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-
-        $product = new Product();
+         
+        
+         $product = new Product();
 
         $product->name = $data['name'];     
         $product->category_id = $data['category_id'];
@@ -68,8 +73,28 @@ class ProductController extends Controller
         $product->gender = $data['gender'];
         $product->price = $data['price'];
         $product->discount_percent = $data['discount_percent'];
+        $product->amount = $data['amount'];
 
         $product->save();
+        $product_id = $product->id;
+
+        if (isset($data['productImage'])) {
+            foreach ($data['productImage'] as $file) {
+                $image = new ProductImage();
+                if ($request->hasFile('productImage')) {
+                   $image->name = $data['name'];
+                   $image->path = $file->getClientOriginalName();
+                   $file->move('image',$file->getClientOriginalName());
+                   $image->product_id = $product_id;
+
+                   $image->save();
+                }else {
+                    echo 'fail';
+                }
+            }
+        }else {
+            
+        }
         return redirect()->route('product.index');
 
 
@@ -99,9 +124,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $categories = DB::table('categories')->get();
-        $users = DB::table('users')->get();
-        $collection = DB::table('collection')->get();
+        $categories = Category::all();
+        $collection = Collection::all();
+        $users = User::all();
         $product = Product::find($id);
         return view('backend.product.edit',[
             'product' => $product,
@@ -132,6 +157,24 @@ class ProductController extends Controller
         $product->discount_percent = $data['discount_percent'];
 
         $product->save();
+        $product_id = $product->id;
+        if (isset($data['productImage'])) {
+            foreach ($data['productImage'] as $file) {
+                $image = new ProductImage();
+                if ($request->hasFile('productImage')) {
+                   $image->name = $data['name'];
+                   $image->path = $file->getClientOriginalName();
+                   $file->move('image',$file->getClientOriginalName());
+                   $image->product_id = $product_id;
+
+                   $image->save();
+                }else {
+                    echo 'fail';
+                }
+            }
+        }else {
+            
+        }
 
         return redirect()->route('product.index');
     }
@@ -149,5 +192,11 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('product.index');
+    }
+    public function showImages($id){
+            $showImages = Product::find($id)->images;
+            return view('backend.product.detailImage',[
+                'showImages' => $showImages 
+            ]);
     }
 }

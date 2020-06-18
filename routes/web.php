@@ -47,18 +47,43 @@ Route::get('/', function(){
 // 		});
 // });
 
+	
 
-
-Route::group([
-	'namespace' => 'backend'
-],function(){
-	Route::resource('user', 'UserController');
-	Route::resource('product', 'ProductController');
-	Route::resource('category', 'CategoryController');
-
-});
 
 Route::get('/fondend/home',function(){
 	return view('fondend.home');
+
+});
+
+Route::group([
+	'namespace' => 'backend',
+
+],function(){
+	Route::group([
+
+	],function(){
+		Route::resource('product', 'ProductController');
+		Route::get('product/showImage/{id}','ProductController@showImages')->name('product.showImage');
+	});
+	Route::group([
+		
+	],function(){
+		Route::resource('user', 'UserController');
+		Route::get('user/showProduct/{id}','UserController@showProduct')->name('user.showProduct');
+	});
+	Route::group([
+		
+	],function(){
+		Route::resource('category', 'CategoryController');
+		Route::get('category/showProduct/{id}', 'CategoryController@showProduct')->name('category.showProduct');
+	});
+	Route::group([
+		'prefix' => 'order',
+		'as' => 'order.',
+	],function(){
+		Route::get('/','OrderController@index')->name('index');
+		Route::get('/showProduct/{id}','OrderController@showProduct')->name('showProduct');
+
+	});
 
 });

@@ -17,12 +17,15 @@
 				<td>{{ $category['parent_id'] }}</td>
 				<td>{{ $category['depth'] }}</td>
 				<td style="width: 10%;">
-					<a class="btn btn-info" href="{{ route('category.edit',['category'=>$category['id']]) }}">Edit</a>
+					<a class="btn btn-secondary" href="{{ route('category.edit',['category'=>$category['id']]) }}">Edit</a>
 				
 					
 				</td>
 				<td style="width: 10%;">
 					<a class="btn btn-info" href="{{ route('category.show',['category'=>$category['id']]) }}">Detail</a>
+				</td>
+				<td style="width: 10%;">
+					<a class="btn btn-success" href="{{ route('category.showProduct',['id'=>$category['id']]) }}">showProduct</a>
 				</td>
 				<td style="width: 10%">
 					<form action="{{ route('category.destroy',['category'=>$category['id']]) }}" method="post">

@@ -114,4 +114,14 @@ class UserController extends Controller
        $user->delete();
        return redirect()->route('user.index');
     }
+    public function showProduct($id){
+
+        $showProducts = User::find($id)->products;
+        return view('backend.user.detailProduct',[
+            'showProducts' => $showProducts,
+        ]);
+
+        
+
+    }
 }

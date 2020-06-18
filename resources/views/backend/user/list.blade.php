@@ -22,7 +22,10 @@
 					
 				</td>
 				<td style="width: 10%;">
-					<a class="btn btn-info" href="{{ route('user.show',['user'=>$user['id']]) }}">Detail</a>
+					<a class="btn btn-secondary" href="{{ route('user.show',['user'=>$user['id']]) }}">Detail</a>
+				</td>
+				<td style="width: 10%;">
+					<a class="btn btn-success" href="{{ route('user.showProduct',['id'=>$user['id']]) }}">showProduct</a>
 				</td>
 				<td style="width: 10%">
 					<form action="{{ route('user.destroy',['user'=>$user['id']]) }}" method="post">

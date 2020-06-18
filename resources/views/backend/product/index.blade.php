@@ -43,12 +43,17 @@
 					@endif
 				</td>
 				<td style="width: 10%;">
-					<a class="btn btn-info" href="{{ route('product.edit',['product'=>$product['id']]) }}">Edit</a>
+					<a class="btn btn-secondary" href="{{ route('product.edit',['product'=>$product['id']]) }}">Edit</a>
 				
 					
 				</td>
 				<td style="width: 10%;">
 					<a class="btn btn-info" href="{{ route('product.show',['product'=>$product['id']]) }}">Detail</a>
+				</td>
+				<td style="width: 10%;">
+					<a class="btn btn-success" href="{{ route('product.showImage',['id'=>$product['id']]) }}">showImage</a>
+				
+					
 				</td>
 				<td style="width: 10%">
 					<form action="{{ route('product.destroy',['product'=>$product['id']]) }}" method="post">
