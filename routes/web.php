@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/', function(){
+// Route::get('/', function(){
 
-	return view('backend.index');
-});
+// 	return view('backend.index');
+// });
 
 // Route::group(
 // 	[
@@ -51,12 +51,13 @@ Route::get('/', function(){
 
 
 Route::get('/fondend/home',function(){
-	return view('fondend.home');
+	return view('fondend.home')->middleware('auth');
 
 });
 
 Route::group([
 	'namespace' => 'backend',
+	'middleware' => 'auth',
 
 ],function(){
 	Route::group([
@@ -87,3 +88,6 @@ Route::group([
 	});
 
 });
+Auth::routes();
+
+Route::get('/', 'HomeController@index')->name('home');

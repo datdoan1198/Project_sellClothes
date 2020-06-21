@@ -116,6 +116,12 @@
           <i class="fas fa-th-large"></i>
         </a>
       </li>
+      <li>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" >
+            @csrf
+            <input type="submit" class="btn btn-danger" value="đăng xuất">
+        </form>
+      </li>
     </ul>
   </nav>
   <!-- /.navbar -->
