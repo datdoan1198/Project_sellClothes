@@ -9,11 +9,14 @@
       {{ csrf_field() }}
       @method('put')
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
               <div class="form-group" >
                 <label for="">Tến sản phẩm</label>
                 <input type="text" class="form-control" id="" placeholder="" name="name" value="{{ $product['name'] }}">
               </div>
+              @error('name')
+                  <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
               <div class="form-group">
                 <label for="">Danh mục</label>
                 <select class="form-control" name="category_id" id="">
@@ -55,23 +58,32 @@
                 <label for="">Giá bán</label>
                 <input type="text" class="form-control" name="price" value="{{ $product['price'] }}" >
               </div>
+              @error('price')
+                  <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
               <div class="form-group">
                 <label for="">Phần trăm giảm giá</label>
                 <input type="text" class="form-control" name="discount_percent" value="{{ $product['discount_percent'] }}">
               </div>
+              @error('discount_percent')
+                  <div class="alert alert-danger"> {{ $message}}</div>
+              @enderror
               <div class="form-group">
                 <label for="">Số lượng</label>
                 <input type="text" class="form-control" name="amount" value="{{ $product['amount'] }}">
               </div>
+              @error('amount')
+                <div class="alert alert-danger"> {{ $message }}</div>
+              @enderror
           </div>
-          <div class="col-md-6">
+          {{-- <div class="col-md-6">
              @for ($i = 1; $i <= 5 ; $i++)
                 <div class="form-group">
                   <label>Ảnh sản phẩm</label>
                   <input class="form-control" type="file" name="productImage[]">
                 </div>
               @endfor
-          </div>
+          </div> --}}
         </div>    
           <button type="submit" class="btn btn-primary">Create</button>
       </form>

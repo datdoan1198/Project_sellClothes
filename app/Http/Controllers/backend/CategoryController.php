@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Category;
+use App\Http\Requests\StoreCategoryRequest;
 class CategoryController extends Controller
 {
     /**
@@ -28,7 +29,10 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('backend.category.create');
+        $categories = Category::all();
+        return view('backend.category.create',[
+            'categories' =>$categories,
+        ]);
     }
 
     /**
@@ -37,7 +41,7 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
         $data = $request->all();
 
@@ -75,8 +79,10 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-       $category = Category::find($id);
-       return view('backend.category.edit',[
+        $categories = Category::all();
+        $category = Category::find($id);
+        return view('backend.category.edit',[
+            'categories' => $categories,
             'category' => $category,
        ]); 
     }
@@ -88,7 +94,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreCategoryRequest $request, $id)
     {
         $data = $request->all();
         $category = Category::find($id);
@@ -112,7 +118,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = Category::find($id);
+        $category->delete();
+        return redirect()->route('category.index');
     }
     public function showProduct($id){
         $showProducts = Category::find($id)->products;

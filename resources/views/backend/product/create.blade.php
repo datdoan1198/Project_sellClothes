@@ -8,11 +8,23 @@
     <form action="{{ route('product.store') }}" id="frm" method="POST" role="form" enctype="multipart/form-data" >
     	{{ csrf_field() }}
           <div class="row">
-            <div class="col-md-6" style="width: 50%;">
+            <div class="col-md-12" >
+              {{-- @if ($errors->any())
+                  <div class="alert alert-danger">
+                      <ul>
+                          @foreach ($errors->all() as $error)
+                             <li>{{ $error }}</li>
+                         @endforeach
+                      </ul>
+                  </div>
+              @endif --}}
               <div class="form-group" >
                 <label for="">Tến sản phẩm</label>
                 <input type="text" class="form-control" id="" placeholder="" name="name">
               </div>
+              @error('name')
+                  <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
               <div class="form-group">
                 <label for="">Danh mục</label>
                 <select class="form-control" name="category_id" id="">
@@ -48,16 +60,25 @@
                 <label for="">Giá bán</label>
                 <input type="text" class="form-control" name="price">
               </div>
+              @error('price')
+                <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
               <div class="form-group">
                 <label for="">Phần trăm giảm giá</label>
                 <input type="text" class="form-control" name="discount_percent">
               </div>
+              @error('discount_percent')
+                <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
               <div class="form-group">
                 <label for="">Số lượng</label>
                 <input type="text" class="form-control" name="amount">
               </div>
+              @error('amount')
+                <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
             </div>
-            <div class="col-md-6" >
+            {{-- <div class="col-md-6" >
               @for ($i = 1; $i <= 5 ; $i++)
                 <div class="form-group">
                   <label>Ảnh sản phẩm</label>
@@ -65,7 +86,7 @@
                 </div>
               @endfor
               
-            </div>
+            </div> --}}
           </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>

@@ -11,6 +11,9 @@ use App\Model\Category;
 use App\Model\Collection;
 use App\User;
 use App\Model\ProductImage;
+use App\Http\Requests\StoreProductRequest;
+use Illuminate\Support\Facades\Validator;
+
 class ProductController extends Controller
 {
     /**
@@ -59,8 +62,46 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
+        // $validatedDate = $request->validate([
+        //         'name' => 'required|min:10|max:225',
+        //         'price' => 'required|numeric',
+        //         'discount_percent' => 'required|numeric',
+        //         'amount' => 'required|numeric',
+
+        // ]);
+
+        // $validatedDate = $request->validate([
+        //     'name' => ['required' , 'min:10' , 'max:255'],
+        //     'price' => ['required' , 'numeric'],
+        //     'discount_percent' => ['required' , 'numeric'],
+        //     'amount' => ['required' , 'numeric'],  
+
+        // ]);
+
+        // $validator = Validator::make($request->all(),
+        //     [
+        //         'name'         => 'required|min:10|max:255',
+        //         'price' => 'required|numeric',
+        //         'discount_percent'   => 'required|numeric',
+        //         'amount'   => 'required|numeric',
+        //     ],
+        //     [
+        //         'required' => ':attribute Không được để trống',
+        //         'min' => ':attribute Không được nhỏ hơn :min',
+        //         'max' => ':attribute Không được lớn hơn :max'
+        //     ],
+        //     [
+        //         'name' => 'Tên sản phẩm',
+        //     ]
+        // );
+        // if ($validator->errors()){
+        //     return back()
+        //         ->withErrors($validator)
+        //         ->withInput();
+        // }
+
         $data = $request->all();
          
         
@@ -143,7 +184,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreProductRequest $request, $id)
     {
         $data = $request->all();
 
