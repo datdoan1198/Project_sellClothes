@@ -8,7 +8,7 @@
 		@foreach ($showImages as $showImage)
 			<div class="col-md-3">
 		
-				<img class="img-fluid" src="{{ asset('image/'.$showImage->path) }}" alt="">
+				<img class="img-fluid" src="{{ asset('storage/'.$showImage->path) }}" alt="">
 			</div>
 		@endforeach
 		

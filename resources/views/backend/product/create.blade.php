@@ -77,18 +77,19 @@
               @error('amount')
                 <div class="alert alert-danger">{{ $message }}</div>
               @enderror
-            </div>
-            {{-- <div class="col-md-6" >
-              @for ($i = 1; $i <= 5 ; $i++)
-                <div class="form-group">
-                  <label>Ảnh sản phẩm</label>
-                  <input class="form-control" type="file" name="productImage[]">
+              <div class="form-group">
+                  <label for="">Image</label>
+                  <input type="file" class="form-control" name="images[]" multiple> 
                 </div>
-              @endfor
-              
-            </div> --}}
-          </div>
-            <button type="submit" class="btn btn-primary">Create</button>
+              @error('images.*')
+                <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
+              @error('images')
+                <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
+              <div>
+                <button type="submit" class="btn btn-primary">Create</button>
+              </div>
         </form>
     </div>
 </div>

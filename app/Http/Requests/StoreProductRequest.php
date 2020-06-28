@@ -28,15 +28,17 @@ class StoreProductRequest extends FormRequest
             'price' => 'required|numeric',
             'discount_percent' => 'required|numeric',
             'amount' => 'required|numeric',
-
+            'images' => 'required',
+            'images.*' =>'image|mimes:jpeg,jpg,png,gif|max:2048',
         ];
     }
     public function messages(){
         return [
             'required' => ':attribute Không được để trống',
             'min' => ':attribute không ngăn hơn 5 kí tự',
-            'numeric' => ':attribute phải là số'
-            
+            'numeric' => ':attribute phải là số',
+            'image' =>':attribute phải có kiểu :jpg, png, jpeg, gif',
+            'max' => 'dung lượng của :attribute quá  lớn'
         ];
     }
 
@@ -47,6 +49,7 @@ class StoreProductRequest extends FormRequest
             'price' => 'Giá bán',
             'discount_percent' => 'Phân trăm giảm giá',
             'amount' => 'số lượng',
+            'images' => 'ảnh',
 
         ];
     }

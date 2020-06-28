@@ -13,6 +13,7 @@ use App\User;
 use App\Model\ProductImage;
 use App\Http\Requests\StoreProductRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -26,7 +27,15 @@ class ProductController extends Controller
     // const NỮ::0;
     public function index()
     {
-        
+        // Storage::disk('public')->put('test1.txt', 'hoan');
+        // $file = Storage::files('/');
+        // $file = Storage::allFiles();
+        // Storage::disk('public')->delete('abc/test.txt');
+        // Storage::deleteDirectory($path);
+        // Storage::makeDirectory('category');
+        // $conten = Storage::disk('test')->get('test.txt');
+        // return Storage::download('test1.txt');
+        // dd(1);
         $categories = Category::all();
         $collection = Collection::all();
         $products = Product::Paginate(5);
@@ -101,11 +110,10 @@ class ProductController extends Controller
         //         ->withErrors($validator)
         //         ->withInput();
         // }
-
+       
         $data = $request->all();
-         
-        
-         $product = new Product();
+        $images = $data['images'];
+        $product = new Product();
 
         $product->name = $data['name'];     
         $product->category_id = $data['category_id'];
@@ -118,23 +126,20 @@ class ProductController extends Controller
 
         $product->save();
         $product_id = $product->id;
+        $parent_file = $data['name'].'/';
+        if (isset($images)) {
+            foreach ($images as $image) {
+                $img = new ProductImage();
+                $nameFile = $image->getClientOriginalName();             
+                $img->name = $data['name'];
+                $img->path = $parent_file.$nameFile;
+                $img->product_id = $product_id;
+                Storage::disk('public')->putFileAs($parent_file,$image,$nameFile);
 
-        if (isset($data['productImage'])) {
-            foreach ($data['productImage'] as $file) {
-                $image = new ProductImage();
-                if ($request->hasFile('productImage')) {
-                   $image->name = $data['name'];
-                   $image->path = $file->getClientOriginalName();
-                   $file->move('image',$file->getClientOriginalName());
-                   $image->product_id = $product_id;
-
-                   $image->save();
-                }else {
-                    echo 'fail';
-                }
+                $img->save();
             }
         }else {
-            
+            echo 'fail';
         }
         return redirect()->route('product.index');
 
@@ -229,13 +234,19 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::find($id);
-
+        $name = $product->name;
+        Storage::disk('public')->deleteDirectory($name);
+        $images = ProductImage::all()->where('product_id',$id); 
+        foreach ($images as $image) {
+            $image->delete();
+        }
         $product->delete();
 
         return redirect()->route('product.index');
     }
     public function showImages($id){
             $showImages = Product::find($id)->images;
+
             return view('backend.product.detailImage',[
                 'showImages' => $showImages 
             ]);

@@ -26,6 +26,7 @@ class StoreCategoryRequest extends FormRequest
         return [
             'name' => 'required',
             'depth' => 'required|numeric',
+            
         ];
     }
     public function messages(){
@@ -33,12 +34,15 @@ class StoreCategoryRequest extends FormRequest
         return[
             'required' => ':attribute không được để trống',
             'numeric' => ':attribute phải là số',
+            'file' => ':attribute phải là file',
+            
         ];
     }
     public function attributes(){
         return[
             'name' => 'Tên danh mục',
             'depth' => 'Độ sâu danh mục',
+            
         ];
 
     }
