@@ -11,7 +11,7 @@ class CollectionTableSeeder extends Seeder
      */
     public function run()
     {
-        
+            DB::table('collection')->truncate();
         	DB::table('collection')->insert([
         		['name' => 'Mùa Xuân'],
         		['name' => 'Mùa Hè'],

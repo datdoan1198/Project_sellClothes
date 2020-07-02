@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use Auth;
 
 class UserController extends Controller
 {
@@ -30,7 +31,13 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('backend.user.create');
+        $user = Auth::user();
+
+        if ($user->can('create')) {
+            return view('backend.user.create');
+        }else {
+            echo 'Bạn không có quyền thêm mối user';
+        }
     }
 
     /**
@@ -76,10 +83,15 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $user_auth = Auth::user();
         $user = User::find($id);
-        return view('backend.user.edit',[
+        if ($user_auth->can('update')) {
+            return view('backend.user.edit',[
             'user'=>$user,
-        ]);
+            ]);
+        }else {
+            echo 'bạn không có quyền sửa user';
+        }
     }
 
     /**
@@ -111,8 +123,13 @@ class UserController extends Controller
     public function destroy($id)
     {
        $user = User::find($id);
-       $user->delete();
-       return redirect()->route('user.index');
+       $user_auth = Auth::user();
+       if ($user_auth->can('delete')) {
+            $user->delete();
+            return redirect()->route('user.index');
+       }else {
+           echo 'Bạn không có quyền xóa user';
+       }
     }
     public function showProduct($id){
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Category;
 use App\Http\Requests\StoreCategoryRequest;
+use Auth;
 class CategoryController extends Controller
 {
     /**
@@ -81,10 +82,16 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
         $category = Category::find($id);
-        return view('backend.category.edit',[
+        $user = Auth::user();
+        if ($user->can('update')) {
+          return view('backend.category.edit',[
             'categories' => $categories,
             'category' => $category,
-       ]); 
+            ]);   
+        }else {
+            echo 'bạn không có quyền sửa';
+        }
+        
     }
 
     /**
@@ -106,8 +113,6 @@ class CategoryController extends Controller
         $category->save();
 
         return redirect()->route('category.index');
-
-
     }
 
     /**
@@ -119,10 +124,15 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
-        $category->delete();
-        return redirect()->route('category.index');
+        $user = Auth::user();
+        if ($user->can('delete')) {        
+            $category->delete();
+            return redirect()->route('category.index');
+        }else {
+            echo 'Bạn không có quyền xóa';
+        }
     }
-    public function showProduct($id){
+    public function showProduct($id){       
         $showProducts = Category::find($id)->products;
 
         return view('backend.category.detailProduct',[

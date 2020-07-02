@@ -1,4 +1,4 @@
-@extends('backend.layout.master')
+  @extends('backend.layout.master')
 
 @section('content')
 <div class="container-fluid">
@@ -25,60 +25,95 @@
               @error('name')
                   <div class="alert alert-danger">{{ $message }}</div>
               @enderror
-              <div class="form-group">
-                <label for="">Danh mục</label>
-                <select class="form-control" name="category_id" id="">
-                  @foreach ($categories as $category)
-                  <option value="{{ $category->id }}">{{ $category->name }}</option>
-                  @endforeach                
-                </select>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="">Danh mục</label>
+                    <select class="form-control" name="category_id" id="">
+                      @foreach ($categories as $category)
+                      <option value="{{ $category->id }}">{{ $category->name }}</option>
+                      @endforeach                
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="">Bộ Sưu Tập</label>
+                    <select class="form-control" name="collection_id" id="">
+                      @foreach ($collection as $value)
+                      <option value="{{ $value->id }}">{{ $value->name }}</option>
+                      @endforeach                
+                    </select>
+                  </div>
+                </div>
               </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="">Thương hiệu</label>
+                    <input type="text" name="information_product[]" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="">Xuất Sứ</label>
+                    <input type="text" name="information_product[]" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="">Chất liệu</label>
+                  <input type="text" name="information_product[]" class="form-control">
+                </div>
+              </div>       
               <div class="form-group">
-                <label for="">Người Dùng</label>
-                <select class="form-control" name="user_id" id="">
-                  @foreach ($users as $user)
-                  <option value="{{ $user->id }}">{{ $user->name }}</option>
-                  @endforeach                
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="">Bộ Sưu Tập</label>
-                <select class="form-control" name="collection_id" id="">
-                  @foreach ($collection as $value)
-                  <option value="{{ $value->id }}">{{ $value->name }}</option>
-                  @endforeach                
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="">Gender</label>
+                <label for="">Giới tính</label>
                 <select class="form-control" name="gender" id="">
                   <option value="1">Nam</option>
                   <option value="0">Nữ</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label for="">Giá bán</label>
-                <input type="text" class="form-control" name="price">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="">Giá nhập</label>
+                    <input type="text" class="form-control" name="origin_price">
+                  </div>
+                  @error('origin_price')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                  @enderror
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="">Giá bán</label>
+                    <input type="text" class="form-control" name="sale_price">
+                  </div>
+                  @error('sale_price')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                  @enderror
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="">Số lượng</label>
+                    <input type="text" class="form-control" name="amount">
+                  </div>
+                  @error('amount')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                  @enderror
+                </div>
               </div>
-              @error('price')
-                <div class="alert alert-danger">{{ $message }}</div>
-              @enderror
               <div class="form-group">
-                <label for="">Phần trăm giảm giá</label>
-                <input type="text" class="form-control" name="discount_percent">
-              </div>
-              @error('discount_percent')
-                <div class="alert alert-danger">{{ $message }}</div>
-              @enderror
+                <label for="">Nội Dung Sản Phẩm</label>
+                <textarea name="content" id="content" class="form-control"></textarea>
+              </div>  
               <div class="form-group">
-                <label for="">Số lượng</label>
-                <input type="text" class="form-control" name="amount">
-              </div>
-              @error('amount')
-                <div class="alert alert-danger">{{ $message }}</div>
-              @enderror
+                <label for="">ảnh đại diện</label>
+                <input type="file" class="form-control" name="avatar">
+              </div>   
+              @error('avatar')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                  @enderror 
               <div class="form-group">
-                  <label for="">Image</label>
+                  <label for="">Ảnh sản phẩm</label>
                   <input type="file" class="form-control" name="images[]" multiple> 
                 </div>
               @error('images.*')

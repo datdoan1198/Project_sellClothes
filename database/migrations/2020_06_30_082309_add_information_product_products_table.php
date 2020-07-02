@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRoleUsersTable extends Migration
+class AddInformationProductProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddRoleUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->tinyInteger('role')->comment('thể hiện quyền truy cập cho mỗi user')->default(0)->after('image');
+        Schema::table('products', function (Blueprint $table) {
+            $table->json('information_product')->comment('thông tin về sản phẩm')->after('content')->nullable();
         });
     }
 
@@ -25,8 +25,7 @@ class AddRoleUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            
+        Schema::table('products', function (Blueprint $table) {
         });
     }
 }

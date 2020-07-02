@@ -51,7 +51,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/fondend/home',function(){
-	return view('fondend.home')->middleware('auth');
+	return view('fondend.home');
 
 });
 
@@ -64,6 +64,8 @@ Route::group([
 
 	],function(){
 		Route::resource('product', 'ProductController');
+
+
 		Route::get('product/showImage/{id}','ProductController@showImages')->name('product.showImage');
 	});
 	Route::group([
@@ -91,3 +93,9 @@ Route::group([
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/products','HomeController@category')->name('products');
+Route::get('/detail_product/{id}','HomeController@detail_product')->name('detail_product');
+Route::get('/dress','HomeController@dress')->name('dress');
+Route::get('/T-shirt','HomeController@t_shỉrt')->name('t_shỉrt');
+
+

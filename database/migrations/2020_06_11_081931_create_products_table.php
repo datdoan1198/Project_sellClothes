@@ -20,8 +20,8 @@ class CreateProductsTable extends Migration
             $table->bigInteger('user_id')->comment('user có liên quan')->nullable();
             $table->bigInteger('collection_id')->comment('sản phẩm liên quan đến bộ sư tập')->nullable();
             $table->boolean('gender')->comment('sản phẩm dành cho nam hoặc nữ')->nullable();
-            $table->bigInteger('price')->comment('giá bán của sản phẩm')->nullable();
-            $table->integer('discount_percent')->comment('phần trăm giảm giá')->nullable();
+            $table->bigInteger('origin_price')->comment('giá gốc')->nullable();
+            $table->integer('sale_price')->comment('giá bán')->nullable();
             $table->boolean('status')->comment('trạng thái của sản phẩm')->default('1');
             $table->timestamps();
         }); 

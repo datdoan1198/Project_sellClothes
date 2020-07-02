@@ -25,9 +25,10 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'price' => 'required|numeric',
-            'discount_percent' => 'required|numeric',
+            'origin_price' => 'required|numeric',
+            'sale_price' => 'required|numeric',
             'amount' => 'required|numeric',
+            'avatar' =>'required|image|mimes:jpg,png,jpeg,gif|max:2048',
             'images' => 'required',
             'images.*' =>'image|mimes:jpeg,jpg,png,gif|max:2048',
         ];
@@ -46,10 +47,11 @@ class StoreProductRequest extends FormRequest
 
         return [
             'name' => 'Tên sản phẩm',
-            'price' => 'Giá bán',
-            'discount_percent' => 'Phân trăm giảm giá',
+            'origin_price' => 'Giá bán gốc',
+            'sale_price' => 'giá bán',
             'amount' => 'số lượng',
             'images' => 'ảnh',
+            'avatar' => 'ảnh đại diện',
 
         ];
     }

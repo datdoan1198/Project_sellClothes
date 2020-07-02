@@ -47,51 +47,8 @@
 	<!-- /NAVIGATION -->
 
 	<!-- HOME -->
-	<div id="home">
-		<!-- container -->
-		<div class="container">
-			<!-- home wrap -->
-			<div class="home-wrap">
-				<!-- home slick -->
-				<div id="home-slick">
-					<!-- banner -->
-					<div class="banner banner-1">
-						<img src="fondend/img/banner01.jpg" alt="">
-						<div class="banner-caption text-center">
-							<h1>Bags sale</h1>
-							<h3 class="white-color font-weak">Up to 50% Discount</h3>
-							<button class="primary-btn">Shop Now</button>
-						</div>
-					</div>
-					<!-- /banner -->
-
-					<!-- banner -->
-					<div class="banner banner-1">
-						<img src="fondend/img/banner02.jpg" alt="">
-						<div class="banner-caption">
-							<h1 class="primary-color">HOT DEAL<br><span class="white-color font-weak">Up to 50% OFF</span></h1>
-							<button class="primary-btn">Shop Now</button>
-						</div>
-					</div>
-					<!-- /banner -->
-
-					<!-- banner -->
-					<div class="banner banner-1">
-						<img src="fondend/img/banner03.jpg" alt="">
-						<div class="banner-caption">
-							<h1 class="white-color">New Product <span>Collection</span></h1>
-							<button class="primary-btn">Shop Now</button>
-						</div>
-					</div>
-					<!-- /banner -->
-				</div>
-				<!-- /home slick -->
-			</div>
-			<!-- /home wrap -->
-		</div>
-		<!-- /container -->
-	</div>
-	<!-- /HOME -->
+	@yield('home')
+	<!-- /HOME -->	
 
 	<!-- section -->
 	@yield('collection_new')
@@ -106,15 +63,28 @@
 	<!-- /section -->
 
 	<!-- section -->
-	<div class="section">
-		<!-- container -->
-		<div class="container">
-			@yield('product_trening')
+	@yield('product_trening')
+	<!-- /section -->
 
-			@yield('accessories')
-		</div>
-		<!-- /container -->
-	</div>
+
+	{{-- trang category --}}
+
+	<!-- BREADCRUMB -->
+	@yield('breadcrumb')
+	<!-- /BREADCRUMB -->
+	
+	<!-- section -->
+	@yield('content')
+	<!-- /section -->
+
+	{{-- trang chi tiet --}}
+
+	<!-- section -->
+	@yield('information_product')
+	<!-- /section -->
+
+	<!-- section -->
+	@yield('aaa')
 	<!-- /section -->
 
 	<!-- FOOTER -->

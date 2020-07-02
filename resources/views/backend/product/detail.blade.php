@@ -9,6 +9,11 @@
 	@else
 		{{ 'Nữ' }}
 	@endif</p>
-	<p>Giá: {{ number_format($product['price']) }}</p>
+	<p>Giá gốc: {{ number_format($product['origin_price']) }}</p>
+	<p>Giá bán: {{ number_format($product['sale_price']) }}</p>
 	<p>số lượng: {{ $product['amount'] }}</p>
+	<p>Thương hiệu: {{ json_decode($product['information_product'])[0] }}</p>
+	<p>xuất sứ: {{ json_decode($product['information_product'])[1] }}</p>
+	<p>chất liệu: {{ json_decode($product['information_product'])[2] }}</p>
+	<p> {{ $product['content'] }} </p>
 @endsection
