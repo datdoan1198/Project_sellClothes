@@ -26,7 +26,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item ">
-            <a href="#index" class="nav-link">
+            <a href="{{ route('home') }}" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Trang chủ
@@ -34,7 +34,8 @@
               </p>
             </a>
           </li>
-          <li class="nav-item has-treeview">
+         
+          <li class="nav-item has-treeview  @if (route('user.index') == url()->current()) {{'menu-open'}} @endif" style="display: @if (Auth::user()->role == 1  ){{'block'}}@else{{ 'none'  }}@endif ">
             <a href="" class="nav-link ">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
@@ -56,8 +57,10 @@
                 </a>
               </li>
             </ul>
-          </li>
-          <li class="nav-item has-treeview">
+          </li>  {{-- expr --}}
+          
+          
+          <li class="nav-item has-treeview @if (route('product.index') == url()->current()) {{'menu-open'}} @endif">
             <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
@@ -72,17 +75,18 @@
                   <p>Danh sách sản phẩm</p>
                 </a>
               </li>
-              <li class="nav-item">
+             {{--  <li class="nav-item">
                 <a href="{{ route('product.create') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Thêm sản phẩm</p>
                 </a>
-              </li>
+              </li> --}}
             </ul>
           </li>
-          <li class="nav-item has-treeview">
+
+          <li class="nav-item has-treeview @if (route('category.index') == url()->current()) {{'menu-open'}} @endif" style="display: @if (Auth::user()->role == 1  ){{'block'}}@else{{ 'none'  }}@endif ">
             <a href="#" class="nav-link ">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-tachometer-alt" ></i>
               <p>
                 Quản lí danh mục
                 <i class="right fas fa-angle-left"></i>
@@ -103,7 +107,56 @@
               </li>
             </ul>
           </li>
-           <li class="nav-item has-treeview">
+
+          
+          <li class="nav-item has-treeview @if (route('collection.index') == url()->current()) {{'menu-open'}} @endif" style="display: @if (Auth::user()->role == 1  ){{'block'}}@else{{ 'none'  }}@endif ">
+            <a href="#" class="nav-link ">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Quản lí bộ sưu tập
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('collection.index') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Danh sách bộ sưu tập</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('collection.create') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Thêm danh mục</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item has-treeview @if (route('trademark.index') == url()->current()) {{'menu-open'}} @endif" style="display: @if (Auth::user()->role == 1  ){{'block'}}@else{{ 'none'  }}@endif ">
+            <a href="#" class="nav-link ">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Quản lí thương hiệu
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('trademark.index') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Danh sách thương hiệu</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('trademark.create') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Thêm danh mục</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-treeview @if (route('order.index') == url()->current()) {{'menu-open'}} @endif" >
             <a href="#" class="nav-link ">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
@@ -118,99 +171,38 @@
                   <p>Danh sách orders</p>
                 </a>
               </li>
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a href="" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Thêm danh mục</p>
                 </a>
-              </li>
+              </li> --}}
             </ul>
           </li>
 
-         {{--  <li class="nav-header">EXAMPLES</li>
-          <li class="nav-item has-treeview menu-open">
-            <a href="#" class="nav-link active">
-              <i class="nav-icon far fa-plus-square"></i>
+          <li class="nav-item has-treeview @if (route('warehouse.index') == url()->current()) {{'menu-open'}} @endif" >
+            <a href="#" class="nav-link ">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                Extras
-                <i class="fas fa-angle-left right"></i>
+                Quản lí kho
+                <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="../examples/login.html" class="nav-link">
+                <a href="{{ route('warehouse.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Login</p>
+                  <p>Danh sách sản phẩm</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="../examples/register.html" class="nav-link">
+              {{-- <li class="nav-item">
+                <a href="" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Register</p>
+                  <p>Thêm danh mục</p>
                 </a>
-              </li>
-              <li class="nav-item">
-                <a href="../examples/forgot-password.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Forgot Password</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../examples/recover-password.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Recover Password</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../examples/lockscreen.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Lockscreen</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../examples/legacy-user-menu.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Legacy User Menu</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../examples/language-menu.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Language Menu</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../examples/404.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Error 404</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../examples/500.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Error 500</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../examples/pace.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Pace</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../examples/blank.html" class="nav-link active">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Blank Page</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="../../starter.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Starter Page</p>
-                </a>
-              </li>
+              </li> --}}
             </ul>
-          </li> --}}
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

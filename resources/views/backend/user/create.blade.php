@@ -11,30 +11,44 @@
                 <label for="">name</label>
                 <input type="text" class="form-control" id="" placeholder="" name="name">
             </div>
+            @error('name')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <div class="form-group" >
                 <label for="">Email</label>
                 <input type="text" class="form-control" name="email">
             </div>
+            @error('email')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <div class="form-group">
                 <label for="">PassWord</label>
                 <input type="password" class="form-control" id="" placeholder="" name="password">
             </div>
+            @error('password')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <div class="form-group">
               <label for="">Phone</label>
               <input type="number" class="form-control" name="phone">
             </div>
+            @error('phone')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <div class="form-group">
               <label for="">Address</label>
               <input type="text" class="form-control" name="address">
             </div>
+            @error('address')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <div class="form-group">
                 <label for="">Image</label>
                 <input type="file" class="form-control" name="image">
             </div>
-           {{--  <div class="form-group">
-                <label for="">Time</label>
-                <input type="text" class="form-control" id="" placeholder="" name="created_at" value="<?php echo  date("Y/m/d")." ". date("h:i:sa") ?>" disabled>
-            </div> --}}
+            @error('image')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>

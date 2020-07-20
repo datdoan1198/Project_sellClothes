@@ -33,26 +33,26 @@ class StoreProductRequest extends FormRequest
             'images.*' =>'image|mimes:jpeg,jpg,png,gif|max:2048',
         ];
     }
-    public function messages(){
+    public function messages()
+    {
         return [
             'required' => ':attribute Không được để trống',
             'min' => ':attribute không ngăn hơn 5 kí tự',
             'numeric' => ':attribute phải là số',
-            'image' =>':attribute phải có kiểu :jpg, png, jpeg, gif',
+            'image' => ':attribute phải có kiểu :jpg, png, jpeg, gif',
             'max' => 'dung lượng của :attribute quá  lớn'
         ];
     }
 
-    public function attributes(){
-
-        return [
-            'name' => 'Tên sản phẩm',
-            'origin_price' => 'Giá bán gốc',
-            'sale_price' => 'giá bán',
-            'amount' => 'số lượng',
-            'images' => 'ảnh',
-            'avatar' => 'ảnh đại diện',
-
-        ];
+    public function attributes()
+    {
+            return[
+                'name' => 'Tên sản phẩm',
+                'origin_price' => 'Giá bán gốc',
+                'sale_price' => 'giá bán',
+                'amount' => 'số lượng',
+                'images' => 'ảnh',
+                'avatar' => 'ảnh đại diện',
+            ];
     }
 }

@@ -5,7 +5,11 @@
 				<!-- category nav -->
 				<div class="category-nav show-on-click">
 					<span class="category-header">Categories <i class="fa fa-list"></i></span>
-					<ul class="category-list">
+					<ul class="category-list @if (route('home') == url()->current())
+						{{ 'open' }}
+						@else
+							{{ '' }}
+					@endif">
 						<li class="dropdown side-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Women’s Clothing <i class="fa fa-angle-right"></i></a>
 							<div class="custom-menu">
@@ -60,7 +64,6 @@
 								</div>
 							</div>
 						</li>
-						<li><a href="#">Men’s Clothing</a></li>
 						<li class="dropdown side-dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Phones & Accessories <i class="fa fa-angle-right"></i></a>
 							<div class="custom-menu">
 								<div class="row">
@@ -118,9 +121,8 @@
 								</div>
 							</div>
 						</li>
-						<li><a href="#">Computer & Office</a></li>
-						<li><a href="#">Consumer Electronics</a></li>
-						<li class="dropdown side-dropdown">
+						
+						{{-- <li class="dropdown side-dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Jewelry & Watches <i class="fa fa-angle-right"></i></a>
 							<div class="custom-menu">
 								<div class="row">
@@ -191,7 +193,7 @@
 									</div>
 								</div>
 							</div>
-						</li>
+						</li> --}}
 						<li><a href="#">Bags & Shoes</a></li>
 						<li><a href="#">View All</a></li>
 					</ul>
@@ -202,62 +204,52 @@
 				<div class="menu-nav">
 					<span class="menu-header">Menu <i class="fa fa-bars"></i></span>
 					<ul class="menu-list">
-						<li><a href="#">Home</a></li>
-						<li><a href="#">Shop</a></li>
-						<li class="dropdown mega-dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" >Thời Trang Nữ <i class="fa fa-caret-down"></i></a>
+						<li><a href="{{ route('home') }}">Home</a></li>
+						
+						@foreach ($categories_parents as $categories_parent)
+							@if ($categories_parent['parent_id'] == 0)
+							@php
+								$id = $categories_parent['id'];
+							@endphp
+						<li class="dropdown mega-dropdown full-width"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+							{{ $categories_parent['name'] }}
+							<i class="fa fa-caret-down"></i></a>
 							<div class="custom-menu">
 								<div class="row">
-									<div class="col-md-4">
+									@foreach ($categories_parents as $category)
+									@if ($category->parent_id == $id)
+									@php
+										$category_id = $category['id'];
+									@endphp
+									<div class="col-md-3">
+										<div class="hidden-sm hidden-xs">
+											<a class="banner banner-1" href="#">
+												<img style="height: 150px;" src="{{ asset('storage/categories/'.$category->avatar) }}" alt="">
+												<div class="banner-caption text-center">
+													<h3 class="white-color text-uppercase">{{ $category['name'] }}</h3>
+												</div>
+											</a>
+											<hr>
+										</div>
 										<ul class="list-links">
 											<li>
-												<h3 class="list-links-title">Categories</h3></li>
-											<li><a href="{{ route('dress') }}">Đầm</a></li>
-											<li><a href="#">Men’s Clothing</a></li>
-											<li><a href="#">Phones & Accessories</a></li>
-											<li><a href="#">Jewelry & Watches</a></li>
-											<li><a href="#">Bags & Shoes</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Categories</h3></li>
-											<li><a href="#">Women’s Clothing</a></li>
-											<li><a href="#">Men’s Clothing</a></li>
-											<li><a href="#">Phones & Accessories</a></li>
-											<li><a href="#">Jewelry & Watches</a></li>
-											<li><a href="#">Bags & Shoes</a></li>
-										</ul>
-										<hr class="hidden-md hidden-lg">
-									</div>
-									<div class="col-md-4">
-										<ul class="list-links">
-											<li>
-												<h3 class="list-links-title">Categories</h3></li>
-											<li><a href="#">Women’s Clothing</a></li>
-											<li><a href="#">Men’s Clothing</a></li>
-											<li><a href="#">Phones & Accessories</a></li>
-											<li><a href="#">Jewelry & Watches</a></li>
-											<li><a href="#">Bags & Shoes</a></li>
+												<h3 class="list-links-title">{{ $category['name'] }}</h3>
+											</li>
+											@foreach ($categories_parents as $category_children)
+											@if ($category_children->parent_id == $category_id)
+											<li><a href="{{ route('category',['id' => $category_children['id']]) }}">{{ $category_children['name'] }}</a></li>
+											@endif
+											@endforeach
 										</ul>
 									</div>
-								</div>
-								<div class="row hidden-sm hidden-xs">
-									<div class="col-md-12">
-										<hr>
-										<a class="banner banner-1" href="#">
-											<img src="fondend/img/banner05.jpg" alt="">
-											<div class="banner-caption text-center">
-												<h2 class="white-color">NEW COLLECTION</h2>
-												<h3 class="white-color font-weak">HOT DEAL</h3>
-											</div>
-										</a>
-									</div>
+									@endif
+									@endforeach
 								</div>
 							</div>
 						</li>
-						<li class="dropdown mega-dropdown full-width"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Thời Trang Nam <i class="fa fa-caret-down"></i></a>
+						@endif
+						@endforeach
+						{{-- <li class="dropdown mega-dropdown full-width"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Men <i class="fa fa-caret-down"></i></a>
 							<div class="custom-menu">
 								<div class="row">
 									<div class="col-md-3">
@@ -273,7 +265,7 @@
 										<ul class="list-links">
 											<li>
 												<h3 class="list-links-title">Categories</h3></li>
-											<li><a href="{{ route('t_shỉrt') }}">Áo Thun</a></li>
+											<li><a href="#">Women’s Clothing</a></li>
 											<li><a href="#">Men’s Clothing</a></li>
 											<li><a href="#">Phones & Accessories</a></li>
 											<li><a href="#">Jewelry & Watches</a></li>
@@ -283,7 +275,7 @@
 									<div class="col-md-3">
 										<div class="hidden-sm hidden-xs">
 											<a class="banner banner-1" href="#">
-												<img src="fondend/img/banner07.jpg" alt="">
+												<img src="./img/banner07.jpg" alt="">
 												<div class="banner-caption text-center">
 													<h3 class="white-color text-uppercase">Men’s</h3>
 												</div>
@@ -303,7 +295,7 @@
 									<div class="col-md-3">
 										<div class="hidden-sm hidden-xs">
 											<a class="banner banner-1" href="#">
-												<img src="fondend/img/banner08.jpg" alt="">
+												<img src="./img/banner08.jpg" alt="">
 												<div class="banner-caption text-center">
 													<h3 class="white-color text-uppercase">Accessories</h3>
 												</div>
@@ -323,7 +315,7 @@
 									<div class="col-md-3">
 										<div class="hidden-sm hidden-xs">
 											<a class="banner banner-1" href="#">
-												<img src="fondend/img/banner09.jpg" alt="">
+												<img src="./img/banner09.jpg" alt="">
 												<div class="banner-caption text-center">
 													<h3 class="white-color text-uppercase">Bags</h3>
 												</div>
@@ -333,7 +325,7 @@
 										<ul class="list-links">
 											<li>
 												<h3 class="list-links-title">Categories</h3></li>
-											<li><a href="#"></a></li>
+											<li><a href="#">Women’s Clothing</a></li>
 											<li><a href="#">Men’s Clothing</a></li>
 											<li><a href="#">Phones & Accessories</a></li>
 											<li><a href="#">Jewelry & Watches</a></li>
@@ -342,12 +334,12 @@
 									</div>
 								</div>
 							</div>
-						</li>
-						<li><a href="#">Sales</a></li>
+						</li> --}}
+						{{-- <li><a href="#">Sales</a></li> --}}
 						<li class="dropdown default-dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Pages <i class="fa fa-caret-down"></i></a>
 							<ul class="custom-menu">
 								<li><a href="{{ route('home') }}">Home</a></li>
-								<li><a href="{{ route('products') }}">Products</a></li>
+								<li><a href="">Products</a></li>
 								<li><a href="">Product Details</a></li>
 								<li><a href="checkout.html">Checkout</a></li>
 							</ul>

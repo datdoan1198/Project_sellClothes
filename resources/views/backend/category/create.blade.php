@@ -5,7 +5,7 @@
     <h3 align="center">DevMind - Education And Technology Group</h3>
     <h3 align="center">Add New Users</h3>
     <hr>
-    <form action="{{ route('category.store') }}" id="frm" method="POST" role="form" enctype="multipart/form-data" >
+    <form action="{{ route('category.store') }}" id="category" method="POST" enctype="multipart/form-data" >
     	{{ csrf_field() }}
             <div class="form-group" >
                 <label for="">Tến Danh mục</label>
@@ -24,14 +24,13 @@
                 </select>
             </div>
             <div class="form-group">
-              <label for="">Độ Sâu</label>
-              <input type="text" class="form-control" name="depth">
+              <label for="">Ảnh đại diện</label>
+              <input type="file" class="form-control" name="avatar">
             </div>
-            @error('depth')
+            @error('avatar')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
-            
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button  type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>
 </div>

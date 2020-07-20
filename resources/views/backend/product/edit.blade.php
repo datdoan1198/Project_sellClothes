@@ -27,7 +27,7 @@
                   <div class="alert alert-danger">{{ $message }}</div>
               @enderror
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <div class="form-group">
                     <label for="">Danh mục</label>
                     <select class="form-control" name="category_id" id="">
@@ -39,7 +39,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <div class="form-group">
                     <label for="">Bộ Sưu Tập</label>
                     <select class="form-control" name="collection_id" id="">
@@ -51,25 +51,61 @@
                     </select>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <div class="form-group">
                     <label for="">Thương hiệu</label>
-                    <input type="text" name="information_product[]" class="form-control">
+                    <select class="form-control" name="trademark_id" id="">
+                      @foreach ($trademarks as $trademark)
+                      <option value="{{ $trademark->id }}" @if ($trademark->id == $product['trademark_id'])
+                        {{ 'selected' }}
+                      @endif >{{ $trademark->name }}</option>
+                      @endforeach                
+                    </select>
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="">Xuất Sứ</label>
-                    <input type="text" name="information_product[]" class="form-control">
-                  </div>
+              </div>
+             <div id="aaa" class="row">
+                <div class="col-md-10">
+                  <label for="">Thông tin sản phẩm</label>
                 </div>
-                <div class="col-md-6">
-                  <label for="">Chất liệu</label>
-                  <input type="text" name="information_product[]" class="form-control">
+                <div id="a" class="btn btn-info" class="col-md-1">
+                  Thêm
                 </div>
+                <div id="b" style="margin-left: 2%" class="btn btn-danger" class="col-md-1">
+                  xóa
+                </div>
+                <div id="parent" class="col-md-6">
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <input type="text" name="information_product[0][key]" class="form-control"  >
+                        </div>
+                        <div class="col-md-9">
+                          <input type="text" name="information_product[0][value]"  class="form-control">
+                        </div>
+                      </div> 
+                    </div>
+                </div>       
               </div> 
+             
+              <div id="apsection"  class="row">
+                <div class="col-md-11">
+                  <label for="">Size</label>
+
+                </div>
+                <div id="btn_create" class="btn btn-info" class="col-md-1">
+                  Thêm
+                </div>
+                @foreach ($product->size as $element)
+                <div class="col-md-1">
+                    <input type="text" value="{{ $element->size }}" class="form-control">
+                </div>
+                
+                  @endforeach
+                
+                
+                
+              </div>
               <div class="form-group">
                 <label for="">Giới Tính</label>
                 <select class="form-control" name="gender" id="">
@@ -98,16 +134,32 @@
                       <div class="alert alert-danger"> {{ $message}}</div>
                   @enderror
                 </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="">Số lượng</label>
-                    <input type="text" class="form-control" name="amount" value="{{ $product['amount'] }}">
-                  </div>
-                  @error('amount')
-                    <div class="alert alert-danger"> {{ $message }}</div>
-                  @enderror
-                </div>
+
               </div>
+              <div class="form-group">
+                <label for="">Nội Dung Sản Phẩm</label>
+                <textarea name="content" id="content" class="form-control"  >{{ htmlspecialchars_decode($product['content']) }}</textarea>
+              </div> 
+              <div class="form-group">
+                <label for="">ảnh đại diện</label>
+                <br>
+                <img style="width: 10%;" src="{{ asset('storage/products/'.$product['avatar']) }}" alt="">
+                <input type="file" class="form-control" name="avatar">
+              </div>
+              @error('avatar')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                  @enderror 
+              <div class="form-group">
+                  <label for="">Ảnh sản phẩm</label>
+                  <input type="file" class="form-control" name="images[]" multiple> 
+                </div>
+              @error('images.*')
+                <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
+              @error('images')
+                <div class="alert alert-danger">{{ $message }}</div>
+              @enderror
+              <div>
           <button type="submit" class="btn btn-primary">Create</button>
       </form>
     </div>

@@ -25,24 +25,21 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'depth' => 'required|numeric',
-            
+            'avatar' => 'required|image|mimes:jpg,jpeg,png,gif',
         ];
     }
     public function messages(){
 
         return[
             'required' => ':attribute không được để trống',
-            'numeric' => ':attribute phải là số',
-            'file' => ':attribute phải là file',
+            'image' => ':attribute phải đúng định dạng:jpg,png,jpeg, gif'
             
         ];
     }
     public function attributes(){
         return[
-            'name' => 'Tên danh mục',
-            'depth' => 'Độ sâu danh mục',
-            
+            'name' => 'Tên danh mục',  
+            'avatar' => 'Ảnh đại diện',     
         ];
 
     }

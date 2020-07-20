@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Model\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 class CategoryController extends Controller
 {
     /**
@@ -17,10 +19,17 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $user = Auth::user();
+        // if ($user->can('viewAny')) {
+             $categories = Category::orderBy('created_at','desc')->get();
         return view('backend.category.list',[
-            'categories' => $categories,
-        ]);
+                'categories' => $categories,
+            ]);
+        // }else {
+        //     session()->flash('sucssec','bạn không có quyên truy cập');
+        //     return redirect()->route('home');
+        // }
+       
     }
 
     /**
@@ -30,10 +39,17 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        return view('backend.category.create',[
-            'categories' =>$categories,
-        ]);
+        $user = Auth::user();
+        // if ($user->can('create')) {
+           $categories = Category::all();
+            return view('backend.category.create',[
+                'categories' =>$categories,
+            ]);     
+        // }else {
+        //     session()->flash('sucssec','bạn không có quyên truy cập');
+        //     return redirect()->route('home');
+        // }
+        
     }
 
     /**
@@ -44,13 +60,30 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
+
         $data = $request->all();
+        $type_image = strstr($data['avatar']->getClientOriginalName(), '.');
 
-        $category = new Category();
+        $category = new Category(); 
 
+        $depth_parent = $category->find($data['parent_id']);
+       
         $category->name = $data['name'];
         $category->parent_id = $data['parent_id'];
-        $category->depth = $data['depth'];
+
+        if (!$depth_parent == null) {
+            $category->depth = $depth_parent['depth'] + 1 ;
+        }else {
+            $category->depth = 0;
+        }
+        
+        $category->save();
+
+        $parent_file = $category->id . '/';
+
+        Storage::disk('categories')->putFileAs($parent_file,$data['avatar'],'avatar'. $type_image );
+
+        $category->avatar = $parent_file . 'avatar' . $type_image;
 
         $category->save();
 
@@ -67,6 +100,7 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         
+        
         return view('backend.category.detail',[
             'category' => $category,
         ]);
@@ -80,17 +114,20 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $categories = Category::all();
-        $category = Category::find($id);
         $user = Auth::user();
-        if ($user->can('update')) {
-          return view('backend.category.edit',[
-            'categories' => $categories,
-            'category' => $category,
-            ]);   
-        }else {
-            echo 'bạn không có quyền sửa';
-        }
+        // if ($user->can('update')) {
+            $categories = Category::all();
+            $category = Category::find($id);
+              return view('backend.category.edit',[
+                'categories' => $categories,
+                'category' => $category,
+                ]); 
+        // }else {
+        //     session()->flash('sucssec','bạn không có quyên truy cập');
+        //     return redirect()->route('home');
+        // }
+          
+
         
     }
 
@@ -101,15 +138,49 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreCategoryRequest $request, $id)
+    public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(),
+            [
+              'name' => 'required',
+              'avatar' => 'image|mimes:jpg,jpeg,png,gif',  
+            ], 
+            [
+               'required' => ':attribute không được để trống', 
+               'image' => ':attribute phải đúng định dạng:jpg,png,jpeg, gif'
+            ], 
+            [
+                'name' => 'Tên danh mục',  
+                'avatar' => 'Ảnh đại diện', 
+            ]
+
+        );
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
         $data = $request->all();
+        $categories = Category::find($data['parent_id']);
+
         $category = Category::find($id);
 
         $category->name = $data['name'];
         $category->parent_id = $data['parent_id'];
-        $category->depth = $data['depth'];
 
+
+        if (!$categories == null) {
+            $category->depth = $categories['depth'] + 1 ;
+        }else {
+            $category->depth = 0;
+        }
+        if ($request->hasFile('avatar')) {
+            Storage::disk('categories')->deleteDirectory($id);
+            $parent_file = $id . "/";
+            $type_image = strstr($data['avatar']->getClientOriginalName(), '.');
+            $name_image = 'avatar' . $type_image;
+            $category->avatar = $parent_file . $name_image;
+            Storage::disk('categories')->putFileAs($parent_file,$data['avatar'],$name_image);
+
+        }
         $category->save();
 
         return redirect()->route('category.index');
@@ -123,14 +194,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
+
         $category = Category::find($id);
-        $user = Auth::user();
-        if ($user->can('delete')) {        
-            $category->delete();
-            return redirect()->route('category.index');
-        }else {
-            echo 'Bạn không có quyền xóa';
-        }
+        Storage::disk('categories')->deleteDirectory($id);
+        $category->delete();
+        return redirect()->route('category.index');
     }
     public function showProduct($id){       
         $showProducts = Category::find($id)->products;

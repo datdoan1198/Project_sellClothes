@@ -59,6 +59,36 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'products' =>[
+            'driver' =>'local',
+            'root' => storage_path('app/public/products'),
+            'url' =>env('APP_URL').'storage/products',
+            'visibility' => 'public',
+        ],
+        'categories' =>[
+            'driver' =>'local',
+            'root' => storage_path('app/public/categories'),
+            'url' =>env('APP_URL').'storage/categories',
+            'visibility' => 'public',
+        ],
+        'users' =>[
+            'driver' =>'local',
+            'root' => storage_path('app/public/users'),
+            'url' =>env('APP_URL').'storage/users',
+            'visibility' => 'public',
+        ],
+        'collections' => [
+            'driver' =>'local',
+            'root' => storage_path('app/public/collections'),
+            'url' =>env('APP_URL').'storage/collections',
+            'visibility' => 'public',
+        ],
+        'trademarks' => [
+            'driver' =>'local',
+            'root' => storage_path('app/public/trademarks'),
+            'url' =>env('APP_URL').'storage/trademarks',
+            'visibility' => 'public',
+        ],
 
         's3' => [
             'driver' => 's3',

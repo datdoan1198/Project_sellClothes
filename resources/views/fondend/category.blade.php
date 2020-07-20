@@ -17,7 +17,7 @@
 			<!-- row -->
 			<div class="row">
 				<!-- ASIDE -->
-				<div id="aside" class="col-md-3">
+				{{-- <div id="aside" class="col-md-3">
 					<!-- aside widget -->
 					<div class="aside">
 						<h3 class="aside-title">Shop by:</h3>
@@ -147,11 +147,11 @@
 						<!-- /widget product -->
 					</div>
 					<!-- /aside widget -->
-				</div>
+				</div> --}}
 				<!-- /ASIDE -->
 
 				<!-- MAIN -->
-				<div id="main" class="col-md-9">
+				<div id="main" class="col-md-12">
 					<!-- store top filter -->
 					<div class="store-filter clearfix">
 						<div class="pull-left">
@@ -161,30 +161,17 @@
 							</div>
 							<div class="sort-filter">
 								<span class="text-uppercase">Sort By:</span>
-								<select class="input">
+								{{-- <select class="input">
 										<option value="0">Position</option>
 										<option value="0">Price</option>
 										<option value="0">Rating</option>
-									</select>
-								<a href="#" class="main-btn icon-btn"><i class="fa fa-arrow-down"></i></a>
+									</select> --}}
+								<a href="{{ route('category.price',['id'=>$id]) }}" class="main-btn icon-btn"><i class="fa fa-dollar"></i></a>
+								<a href="{{ route('category.view_sell',['id'=>$id]) }}" class="main-btn icon-btn"><i class="fa fa-bar-chart"></i></a>
 							</div>
 						</div>
 						<div class="pull-right">
-							<div class="page-filter">
-								<span class="text-uppercase">Show:</span>
-								<select class="input">
-										<option value="0">10</option>
-										<option value="1">20</option>
-										<option value="2">30</option>
-									</select>
-							</div>
-							<ul class="store-pages">
-								<li><span class="text-uppercase">Page:</span></li>
-								<li class="active">1</li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#"><i class="fa fa-caret-right"></i></a></li>
-							</ul>
+							{!! $products->links() !!}
 						</div>
 					</div>
 					<!-- /store top filter -->
@@ -194,7 +181,7 @@
 						<!-- row -->
 						<div class="row">
 							@foreach ($products as $product)
-								<div class="col-md-4 col-sm-6 col-xs-6">
+							<div class="col-md-4 col-sm-6 col-xs-6">
 								<div class="product product-single">
 									<div class="product-thumb">
 										<div class="product-label">
@@ -202,7 +189,7 @@
 											<span class="sale">-20%</span>
 										</div>
 										<button class="main-btn quick-view"><i class="fa fa-search-plus"></i> Quick view</button>
-										<img src="{{ asset('storage/'.$product->avatar) }}" alt="">
+										<img style="height: 350px;" src="{{ asset('storage/products/'.$product->avatar) }}" alt="">
 									</div>
 									<div class="product-body">
 										<h3 class="product-price">{{ number_format($product['sale_price']) }} VNĐ<br><del class="product-old-price">{{ number_format($product['origin_price']) }} VNĐ</del></h3>
@@ -213,11 +200,15 @@
 											<i class="fa fa-star"></i>
 											<i class="fa fa-star-o empty"></i>
 										</div>
-										<h2 class="product-name"><a href="{{ route('detail_product',['id' => $product['id']]) }}">{{ $product['name'] }}</a></h2>
+										<div style="height: 50px;">
+											<h2 class="product-name"><a href="{{ route('detail_product',['id' => $product['id']]) }}">{{ $product['name'] }}</a></h2>
+										</div>
 										<div class="product-btns">
 											<button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
 											<button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-											<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+											<a href="{{ route('detail_product',['id'=>$product['id']]) }}">
+												<button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+											</a>
 										</div>
 									</div>
 								</div>
@@ -496,21 +487,7 @@
 							</div>
 						</div>
 						<div class="pull-right">
-							<div class="page-filter">
-								<span class="text-uppercase">Show:</span>
-								<select class="input">
-										<option value="0">10</option>
-										<option value="1">20</option>
-										<option value="2">30</option>
-									</select>
-							</div>
-							<ul class="store-pages">
-								<li><span class="text-uppercase">Page:</span></li>
-								<li class="active">1</li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#"><i class="fa fa-caret-right"></i></a></li>
-							</ul>
+							{!! $products->links() !!}
 						</div>
 					</div>
 					<!-- /store bottom filter -->

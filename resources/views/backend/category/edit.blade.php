@@ -15,34 +15,29 @@
             @error('name')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
-            {{-- <div class="form-group">
+            <div class="form-group">
                 <label for="">Danh mục cha</label>
                 <select class="form-control" name="parent_id" id="">
-                    <option value="0"></option>
-                  @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                  @endforeach                
-                </select>
-            </div> --}}
-            <div class="form-group">
-                <label for="">Người Dùng</label>
-                <select class="form-control" name="parent_id" id="">
-
+                  <option value="0"></option>     
                   @foreach ($categories as $category1)
                   <option value="{{ $category1->id }}" @if ($category1->id == $category['parent_id'])
                     {{ 'selected' }}
                   @endif>{{ $category1->name }}</option>
                   @endforeach 
-                  <option value="0"></option>               
+                            
                 </select>
               </div>
             <div class="form-group">
-              <label for="">Độ Sâu</label>
-              <input type="text" class="form-control" name="depth" value="{{ $category['depth'] }}">
+              <label for="">Avatar</label><br>
+              <img style="width: 100px;" src="{{ asset('storage/categories/'.$category['avatar']) }}" alt="">
+              <input type="file" class="form-control" name="avatar">
             </div>
-            @error('depth')
+            @error('avatar')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
+            {{-- <div>
+              <input type="hidden" name="name_file" value="{{ $category['name'] }}">
+            </div> --}}
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>

@@ -19,7 +19,7 @@ class CategoryPolicy
 
     public function viewAny(User $user)
     {
-        //
+        return $user->role ==1;
     }
 
     /**
@@ -42,7 +42,7 @@ class CategoryPolicy
      */
     public function create(User $user)
     {
-        
+        return $user->role == 1; 
     }
 
     /**
@@ -54,7 +54,7 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category)
     {
-       return $user->role == 1;
+      return $user->role == 1; 
     }
 
     /**
@@ -66,7 +66,7 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category)
     {
-        return $user->role == 1;
+       
     }
 
     /**

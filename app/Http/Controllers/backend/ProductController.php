@@ -9,13 +9,20 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Model\Product;
 use App\Model\Category;
 use App\Model\Collection;
+use App\Model\Trademark;
 use App\User;
 use App\Model\ProductImage;
+use App\Model\Size;
 use App\Http\Requests\StoreProductRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use Auth;
+use Illuminate\Support\Facades\Cookie;
+
+use Illuminate\Support\Facades\Cache;
+use App\Model\Review;
+
 class ProductController extends Controller
 {
     /**
@@ -26,15 +33,18 @@ class ProductController extends Controller
 
     // const NAM::1;
     // const NỮ::0;
-    public function index()
+    public function index(Request $request)
     {
+
         $categories = Category::all();
         $collection = Collection::all();
-        $products = Product::orderBy('updated_at','desc')->Paginate(5);
+        $trademarks = Trademark::all();
+        $products = Product::orderBy('updated_at','desc')->get();
         return view('backend.product.index',[
             'products' => $products,
             'categories' => $categories,
             'collection' => $collection,
+            'trademarks' => $trademarks,
         ]);
     }
 
@@ -48,9 +58,11 @@ class ProductController extends Controller
         
         $categories = Category::all();
         $collection = Collection::all();
+        $trademarks = Trademark::all();
         return view('backend.product.create',[
             'categories' => $categories,
             'collection' => $collection,
+            'trademarks' => $trademarks,
         ]);
     }
 
@@ -62,86 +74,61 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        // $validatedDate = $request->validate([
-        //         'name' => 'required|min:10|max:225',
-        //         'price' => 'required|numeric',
-        //         'discount_percent' => 'required|numeric',
-        //         'amount' => 'required|numeric',
 
-        // ]);
-
-        // $validatedDate = $request->validate([
-        //     'name' => ['required' , 'min:10' , 'max:255'],
-        //     'price' => ['required' , 'numeric'],
-        //     'discount_percent' => ['required' , 'numeric'],
-        //     'amount' => ['required' , 'numeric'],  
-
-        // ]);
-
-        // $validator = Validator::make($request->all(),
-        //     [
-        //         'name'         => 'required|min:10|max:255',
-        //         'price' => 'required|numeric',
-        //         'discount_percent'   => 'required|numeric',
-        //         'amount'   => 'required|numeric',
-        //     ],
-        //     [
-        //         'required' => ':attribute Không được để trống',
-        //         'min' => ':attribute Không được nhỏ hơn :min',
-        //         'max' => ':attribute Không được lớn hơn :max'
-        //     ],
-        //     [
-        //         'name' => 'Tên sản phẩm',
-        //     ]
-        // );
-        // if ($validator->errors()){
-        //     return back()
-        //         ->withErrors($validator)
-        //         ->withInput();
-        // }
-       
         $data = $request->all();
-        $type_avatar = strstr($data['avatar']->getClientOriginalName(), '.');
-        $images = $data['images'];
-        $parent_file = $data['name'].'/';
         $information_product = $data['information_product'];
-        $user = Auth::user();
-
         $product = new Product();
-
+        $user = Auth::user();
         $product->name = $data['name'];     
         $product->category_id = $data['category_id'];
         $product->user_id = $user->id;
         $product->collection_id = $data['collection_id'];
+        $product->trademark_id = $data['trademark_id'];
         $product->gender = $data['gender'];
         $product->content = htmlspecialchars($data['content']);
         $product->information_product = json_encode($information_product);
         $product->origin_price = $data['origin_price'];
         $product->sale_price = $data['sale_price'];
+        $product->status = 2;
         $product->amount = $data['amount'];
-        $product->avatar = $parent_file.$data['avatar']->getClientOriginalName();
-        Storage::disk('public')->putFileAs($parent_file,$data['avatar'],'avatar'.$type_avatar);
+        
+        $product->save();
+
+        $images = $data['images'];
+        $product_id = $product->id;
+        $parent_file = $product_id  .'/';
+        $type_avatar = strstr($data['avatar']->getClientOriginalName(), '.');
+
+        $product->avatar = $parent_file . 'avatar' . $type_avatar;
+
+        Storage::disk('products')->putFileAs($parent_file,$data['avatar'],'avatar'.$type_avatar);
 
         $product->save();
 
-        $product_id = $product->id;
-        if (isset($images)) {
             foreach ($images as $image) {
                 $img = new ProductImage();
                 $nameFile = $image->getClientOriginalName();             
                 $img->name = $data['name'];
                 $img->path = $parent_file.$nameFile;
                 $img->product_id = $product_id;
-                Storage::disk('public')->putFileAs($parent_file,$image,$nameFile);
+                Storage::disk('products')->putFileAs($parent_file,$image,$nameFile);
 
                 $img->save();
             }
-        }else {
-            echo 'fail';
-        }
+
+            foreach ($data['size'] as $size) {
+                $size_product =  new Size();
+
+                $size_product->name = $data['name'];
+                $size_product->size = $size;
+                $size_product->product_id = $product_id;
+
+                $size_product->save();
+
+            }
+        $request->session()->flash('sucssec','Tạo Mới Sản Phẩm Thành Công');
+    
         return redirect()->route('product.index');
-
-
     }
 
     /**
@@ -152,9 +139,28 @@ class ProductController extends Controller
      */
     public function show($id)
     {
+        $user = Auth::user();
+        if (isset($user)) {
+            $check = 1;
+        }else {
+            $check = 0;
+        }
         $product = Product::find($id);
+        $information_product = [];
+        foreach (json_decode($product['information_product']) as $key => $value) {
+            $information_product[] = $value;
+
+        }
+        $product_categories = Product::where('category_id', $product->category_id)->orderBy('created_at','desc')->limit(3)->get();
+        $review_products = Review::where('product_id', $id)->orderBy('created_at','desc')->get();
+
         return view('fondend.detail_product',[
             'product' => $product,
+            'information_product'=>$information_product,
+            'check' => $check,
+            'product_categories' => $product_categories,
+            'review_products' => $review_products,
+
 
         ]);     
     }
@@ -166,25 +172,29 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-       
-        $product = Product::find($id);
+    { 
         $user = Auth::user();
-
-        if ($user->can('update',$product)) {
+        $product = Product::find($id);
+        // if ($user->can('update',$product)) {
+           
+            $information_product = [];
+            foreach (json_decode($product['information_product']) as $key => $value) {
+                $information_product[] = $value;
+            }
             $categories = Category::all();
             $collection = Collection::all();
+            $trademarks = Trademark::all();
             return view('backend.product.edit',[
                 'product' => $product,
                 'categories' => $categories,
                 'collection' => $collection,
+                'information_product' => $information_product,
+                'trademarks' => $trademarks,
             ]);
-        }else {
-            echo 'bạn không phải người đăng sản phẩm';
-            // return redirect()->route('product.index');
-        }
-
-        
+        // }else {
+        //     session()->flash('sucssec','Bạn không có quyền truy cập');
+        //     return redirect()->route('home');
+        // }
     }
 
     /**
@@ -196,78 +206,93 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        $data = $request->all();
+        $validator = validator::make($request->all(),
+            [
+                'name' => 'required',
+                'origin_price' => 'required|numeric',
+                'sale_price' => 'required|numeric', 
+                'avatar' =>'image|mimes:jpg,png,jpeg,gif|max:2048',
+                'images.*' =>'image|mimes:jpeg,jpg,png,gif|max:2048',    
+            ],
+            [
+                'required' => ':attribute Không được để trống',
+                'min' => ':attribute không ngăn hơn 5 kí tự',
+                'numeric' => ':attribute phải là số',
+                'image' => ':attribute phải có kiểu :jpg, png, jpeg, gif',
+                'max' => 'dung lượng của :attribute quá  lớn'
+            ],
+            [
+                'name' => 'Tên sản phẩm',
+                'origin_price' => 'Giá bán gốc',
+                'sale_price' => 'giá bán',
+                'images' => 'ảnh',
+                'avatar' => 'ảnh đại diện',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
         $data = $request->all();
 
         
-        // $user = $product->user;
-
-        // dd($product);
-        // $user = Auth::user();
-        // if ($user->can('update',$product)) {
-        //     echo 'aaaaa';
-        // }else {
-        //     echo 'sdsss';
-        // }
-        // dd();
-
-        // if (Gate::allows('update-product', $product)) {
-        //     $product->name = $data['name'];     
-        //     $product->category_id = $data['category_id'];
-        //     $product->user_id = $data['user_id'];
-        //     $product->collection_id = $data['collection_id'];
-        //     $product->gender = $data['gender'];
-        //     $product->price = $data['price'];
-        //     $product->discount_percent = $data['discount_percent'];
-
-        //     $product->save();
-        //     return redirect()->route('product.index');
-        // }else {
-        //     echo 'ko thanh cong';
-        // }
-
-        $data = $request->all();
-        // $type_avatar = strstr($data['avatar']->getClientOriginalName(), '.');
-        // $images = $data['images'];
-        $parent_file = $data['name'].'/';
-        $information_product = $data['information_product'];
-        $user = Auth::user();
 
         $product = Product::find($id);
 
         $product->name = $data['name'];     
         $product->category_id = $data['category_id'];
         $product->collection_id = $data['collection_id'];
+        $product->trademark_id = $data['trademark_id'];
         $product->gender = $data['gender'];
-        // $product->content = htmlspecialchars($data['content']);
-        $product->information_product = json_encode($information_product);
+        $product->content = htmlspecialchars($data['content']);
+        if ($data['information_product'] != null) {
+            $information_product = $data['information_product'];
+            $product->information_product = json_encode($information_product);
+        }      
         $product->origin_price = $data['origin_price'];
         $product->sale_price = $data['sale_price'];
-        $product->amount = $data['amount'];
-        // $product->avatar = $parent_file.$data['avatar']->getClientOriginalName();
-        // Storage::disk('public')->putFileAs($parent_file,$data['avatar'],'avatar'.$type_avatar);
 
         $product->save();
+        $parent_file = $id .'/';
+        if ($request->hasFile('avatar')) {
+            Storage::disk('products')->deleteDirectory($id);
+            $type_avatar = strstr($data['avatar']->getClientOriginalName(), '.');
+            $product->avatar = $parent_file . 'avatar' . $type_avatar;
+            Storage::disk('products')->putFileAs($parent_file,$data['avatar'], 'avatar' . $type_avatar);
+            $product->save();
 
-        // $product_id = $product->id;
-        // if (isset($images)) {
-        //     foreach ($images as $image) {
-        //         $img = new ProductImage();
-        //         $nameFile = $image->getClientOriginalName();             
-        //         $img->name = $data['name'];
-        //         $img->path = $parent_file.$nameFile;
-        //         $img->product_id = $product_id;
-        //         Storage::disk('public')->putFileAs($parent_file,$image,$nameFile);
+        }
+        
+        if ($request->hasFile('images')) {
+            $images = $data['images'];
+            foreach ($images as $image) {
+                $img = new ProductImage();
+                $nameFile = $image->getClientOriginalName();             
+                $img->name = $data['name'];
+                $img->path = $parent_file.$nameFile;
+                $img->product_id = $id;
+                Storage::disk('products')->putFileAs($parent_file,$image,$nameFile);
 
-        //         $img->save();
-        //     }
-        // }else {
-        //     echo 'fail';
-        // }
+                $img->save();
+            }
+        }
+        if (isset($data['size'])) {
+            foreach ($data['size'] as $size) {
+                $size_product =  new Size();
 
-        return redirect()->route('product.index');
+                $size_product->name = $data['name'];
+                $size_product->size = $size;
+                $size_product->product_id = $id;
 
+                $size_product->save();
 
-       
+            }
+        }
+        
+        $request->session()->flash('sucssec','Chỉnh Sửa Sản Phẩm Thành Công');
+        return redirect()->route('product.index');    
     }
 
     /**
@@ -283,13 +308,12 @@ class ProductController extends Controller
         
         if ($user->can('delete',$product)) {
             $name = $product->name;
-            Storage::disk('public')->deleteDirectory($name);
+            Storage::disk('products')->deleteDirectory($id);
             $images = ProductImage::all()->where('product_id',$id); 
             foreach ($images as $image) {
                 $image->delete();
             }
             $product->delete();
-
             return redirect()->route('product.index');
         }else {
             echo 'bạn không phải người đăng sản phẩm '.'<br>';
@@ -302,5 +326,14 @@ class ProductController extends Controller
             return view('backend.product.detailImage',[
                 'showImages' => $showImages 
             ]);
+    }
+    public function check($id)
+    {
+        $product = Product::find($id);
+
+        $product->status = 1;
+        $product->save();
+
+        return redirect()->route('product.index');
     }
 }

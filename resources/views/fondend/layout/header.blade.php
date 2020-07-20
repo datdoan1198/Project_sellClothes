@@ -39,13 +39,13 @@
 					<!-- Logo -->
 					<div class="header-logo">
 						<a class="logo" href="#">
-							<img src="fondend/img/logo.png" alt="">
+							<img src="{{ asset('fondend/img/logo.png') }}" alt="">
 						</a>
 					</div>
 					<!-- /Logo -->
 
 					<!-- Search -->
-					<div class="header-search">
+					{{-- <div class="header-search">
 						<form>
 							<input class="input search-input" type="text" placeholder="Enter your keyword">
 							<select class="input search-categories">
@@ -55,7 +55,7 @@
 							</select>
 							<button class="search-btn"><i class="fa fa-search"></i></button>
 						</form>
-					</div>
+					</div> --}}
 					<!-- /Search -->
 				</div>
 				<div class="pull-right">
@@ -68,7 +68,12 @@
 								</div>
 								<strong class="text-uppercase">My Account <i class="fa fa-caret-down"></i></strong>
 							</div>
-							<a href="#" class="text-uppercase">{{ Auth::user()->name }}</a> 
+							<a href="#" class="text-uppercase">@if (isset(Auth::user()->name))
+								{{ Auth::user()->name }}
+
+							@else
+
+							@endif</a> 
 							<ul class="custom-menu">
 								<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
 								<li><a href="#"><i class="fa fa-heart-o"></i> My Wishlist</a></li>
@@ -77,10 +82,8 @@
 								<li><a href="#"><i class="fa fa-user-plus"></i> Create An Account</a></li>
 								<li>
 									
-									<form id="logout-form" action="{{ route('logout') }}" method="POST" >
-							            @csrf
-							            <input style="margin: 0 auto;" type="submit" class="btn btn-danger"  value="Logout">
-							        </form>
+									
+							        
 							
 								</li>
 								
@@ -93,45 +96,62 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 								<div class="header-btns-icon">
 									<i class="fa fa-shopping-cart"></i>
-									<span class="qty">3</span>
+									<span class="qty">{{ Cart::count() }}</span>
 								</div>
 								<strong class="text-uppercase">My Cart:</strong>
 								<br>
-								<span>35.20$</span>
+								<span>{{ Cart::subtotal() }} </span>
 							</a>
 							<div class="custom-menu">
 								<div id="shopping-cart">
 									<div class="shopping-cart-list">
-										<div class="product product-widget">
+										@foreach ($mini_cart as $cart)
+											<div class="product product-widget">
 											<div class="product-thumb">
-												<img src="fondend/img/thumb-product01.jpg" alt="">
+												@foreach ($img_product as $img)
+													@if ($cart->id == $img->id)
+														<img src="{{ asset('storage/products/'.$img->avatar) }}" alt="">
+													@endif
+												@endforeach
+												
+												
 											</div>
 											<div class="product-body">
-												<h3 class="product-price">$32.50 <span class="qty">x3</span></h3>
-												<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
+												<h3 class="product-price">{{ number_format($cart->price) }}<span class="qty">x {{ $cart->qty }}</span></h3>
+												<h2 class="product-name"><a href="#">{{ $cart->name }}</a></h2>
 											</div>
-											<button class="cancel-btn"><i class="fa fa-trash"></i></button>
+											<a href="{{ route('cart.delete',['id' => $cart->rowId]) }}">
+												<button class="cancel-btn"><i class="fa fa-trash"></i></button>
+											</a>
 										</div>
-										<div class="product product-widget">
-											<div class="product-thumb">
-												<img src="fondend/img/thumb-product01.jpg" alt="">
-											</div>
-											<div class="product-body">
-												<h3 class="product-price">$32.50 <span class="qty">x3</span></h3>
-												<h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-											</div>
-											<button class="cancel-btn"><i class="fa fa-trash"></i></button>
-										</div>
+										@endforeach
+										
 									</div>
 									<div class="shopping-cart-btns">
 										<button class="main-btn">View Cart</button>
-										<button class="primary-btn">Checkout <i class="fa fa-arrow-circle-right"></i></button>
+										<a href="{{ route('cart.index') }}"><button class="primary-btn">Checkout <i class="fa fa-arrow-circle-right"></i></button></a>
 									</div>
 								</div>
 							</div>
 						</li>
 						<!-- /Cart -->
 
+						{{-- login/logout --}}
+						<li class="header-account dropdown default-dropdown">
+							@if (isset(Auth::user()->name))
+										<form id="logout-form" action="{{ route('logout') }}" method="POST" >
+							            @csrf
+							            <input style="margin: 0 auto;" type="submit" class="btn btn-danger"  value="Logout">
+							        </form>
+							        @else
+							        	<form id="logout-form" action="{{  route('login') }}" method="GET" >
+							            @csrf
+							            <input style="margin: 0 auto;" type="submit" class="btn btn-danger"  value="login">
+							        </form>
+									@endif
+						</li>
+						{{-- login/logout --}}
+	
 						<!-- Mobile nav toggle-->
 						<li class="nav-toggle">
 							<button class="nav-toggle-btn main-btn icon-btn"><i class="fa fa-bars"></i></button>
